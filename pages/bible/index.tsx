@@ -4,14 +4,14 @@ import Link from 'next/link';
 const BiblePage = () => {
   const [books, setBooks] = useState<string[]>([]);
   const [selectedBook, setSelectedBook] = useState<string>('');
-  const [chapters, setChapters] = useState<string[]>([]); // Chapters will be fetched later
+  const [chapters, setChapters] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch the list of books from the API
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('/api/BibleBooks');
+        const response = await fetch('/api/BibleBooks'); // Update with your API route
         const data = await response.json();
         if (data.books) {
           setBooks(data.books); // Set the list of books
@@ -31,13 +31,11 @@ const BiblePage = () => {
     setSelectedBook(book);
     setLoading(true);
     try {
-      const response = await fetch(`/api/Bible?passage=${book}.1`);
+      const response = await fetch(`/api/BibleBooks/${book}`); // Update with your API route
       const data = await response.json();
-      
-      // Assuming data contains an array of chapters
-      // Convert chapter numbers to strings
-      const chapters = Array.from({ length: 5 }, (_, i) => (i + 1).toString()); // Example: ["1", "2", "3", "4", "5"]
-      setChapters(chapters); // Set chapters as strings
+
+      // Assuming data contains an array of chapter numbers
+      setChapters(data.chapters.map((chapter: number) => chapter.toString())); // Convert numbers to strings
     } catch (error) {
       console.error('Error fetching chapters:', error);
     } finally {
@@ -84,12 +82,23 @@ const BiblePage = () => {
               ))
             )}
           </div>
+          <button
+            onClick={() => {
+              setSelectedBook('');
+              setChapters([]);
+            }}
+            className="mt-4 bg-gray-300 text-black py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
+          >
+            Back to Books
+          </button>
         </div>
       )}
 
       {/* Footer with navigation links */}
       <footer className="mt-12 text-sm opacity-75 text-center">
-        <Link href="/" className="text-white hover:text-gray-300">Back to Home</Link>
+        <Link href="/" className="text-white hover:text-gray-300">
+          Back to Home
+        </Link>
       </footer>
     </div>
   );

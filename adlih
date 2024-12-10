@@ -1,0 +1,29 @@
+[33mcommit 00610088e3efccc815718c1550c129beaa63d2e7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Ad-#1-am <thedarkgamer256@gmail.com>
+Date:   Tue Dec 10 10:35:11 2024 +0100
+
+    Feat: Added Cohere to chatbot.tsx
+
+[33mcommit 5caefabc799edccefc7305ad02c44215fd231a88[m
+Author: Ad-#1-am <thedarkgamer256@gmail.com>
+Date:   Sun Dec 8 15:55:13 2024 +0100
+
+    Chore: Put ibooks and chapters as dynamic route
+
+[33mcommit 14b02fb7fb010c06a9ad17cb1c2cf26069167d8d[m
+Author: Ad-#1-am <thedarkgamer256@gmail.com>
+Date:   Sun Dec 8 14:15:01 2024 +0100
+
+    Chore: Made API to fetch pages from a Github repo
+
+[33mcommit 406088143b07e5e7e28bf0082c7e9dabd7c7eb6b[m
+Author: Ad-#1-am <thedarkgamer256@gmail.com>
+Date:   Sat Dec 7 19:49:32 2024 +0100
+
+    chore: Created Next App
+
+[33mcommit c99ae8bc7a51626f850f2e52828699b7f0a08f9e[m
+Author: Ad-#1-am <thedarkgamer256@gmail.com>
+Date:   Sat Dec 7 18:56:41 2024 +0100
+
+    Initial commit

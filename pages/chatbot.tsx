@@ -1,33 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
+import ChatbotPage from './components/ChatbotPage';
 
-const ChatbotPage: React.FC = () => {
-  const [messages, setMessages] = useState<string[]>([]);
-  const [input, setInput] = useState('');
-
-  const handleSend = () => {
-    if (!input) return;
-
-    setMessages((prev) => [...prev, `You: ${input}`, `Bot: Searching for ${input}...`]);
-    setInput('');
-  };
-
-  return (
-    <div>
-      <h1>Bible Chatbot</h1>
-      <div>
-        {messages.map((msg, idx) => (
-          <p key={idx}>{msg}</p>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Ask the chatbot..."
-      />
-      <button onClick={handleSend}>Send</button>
-    </div>
-  );
+const Chatbot: React.FC = () => {
+  return <ChatbotPage />;
 };
 
-export default ChatbotPage;
+export default Chatbot;
