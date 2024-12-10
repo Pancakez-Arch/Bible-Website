@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Spinner } from "shadcn"; // Assuming ShadCN has a Spinner component
 import cohereClient from "../util/cohereClient";
+import { useRouter } from "next/router"; // Import useRouter
 
 interface Chat {
   id: number;
@@ -12,14 +12,13 @@ const ChatbotPage: React.FC = () => {
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChatId, setCurrentChatId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false); // Loading state
+  const router = useRouter(); // Initialize the router
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
     setMessages((prev) => [...prev, `You: ${input}`]);
     const chatHistory = messages.join("\n");
-    setLoading(true); // Start loading
 
     try {
       const response = await cohereClient.generate({
@@ -44,7 +43,6 @@ Bot:`,
       console.error("Error with Cohere API:", error);
     } finally {
       setInput("");
-      setLoading(false); // End loading
     }
   };
 
@@ -71,9 +69,21 @@ Bot:`,
     }
   };
 
+  const handleGoBack = () => {
+    router.back(); // This will take the user to the previous page
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white p-6">
       <h1 className="text-4xl font-bold text-center mb-6">Bible Chatbot</h1>
+      {/* Go Back Button */}
+      <button
+        onClick={handleGoBack}
+        className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 mb-4"
+      >
+        Go Back
+      </button>
+      
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Chat Window */}
         <div className="flex-1 bg-white text-black rounded-lg shadow-lg p-4">
@@ -93,11 +103,6 @@ Bot:`,
               <p className="text-gray-500 text-center">
                 Start a conversation to see messages here.
               </p>
-            )}
-            {loading && (
-              <div className="flex justify-center">
-                <Spinner className="text-blue-600" size="lg" /> {/* Spinner component */}
-              </div>
             )}
           </div>
           <div className="flex gap-2">
