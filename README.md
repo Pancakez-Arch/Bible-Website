@@ -1,12 +1,4 @@
 # Bible-Website
-
-Ai koden er på
-
-📁pages
-    └── 📁components
-        └── ChatbotPage.tsx
-    └── chatbot.tsx
-    └── 📁util
-        └── cohereClient.ts
-
-Bruk npm run dev for å se den.
+ 
+** Dag 1
+I dag så lagde jeg foundationen til nettsiden. Da mener jeg start-siden, 
