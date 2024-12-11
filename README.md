@@ -1,5 +1,3 @@
-# Bible-Website
-
 Ai koden er på
 
 📁pages
