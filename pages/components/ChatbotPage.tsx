@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import cohereClient from "../util/cohereClient";
+import cohereClient from "../../lib/util/cohereClient";
 import { useRouter } from "next/router"; // Import useRouter
 
 interface Chat {
