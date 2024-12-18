@@ -3,15 +3,16 @@ import Link from 'next/link';
 
 const BiblePage = () => {
   const [books, setBooks] = useState<string[]>([]);
-  const [selectedBook, setSelectedBook] = useState<string>('');
+  const [selectedBook, setSelectedBook] = useState<string | null>(null);
   const [chapters, setChapters] = useState<string[]>([]);
+  const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch the list of books from the API
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await fetch('/api/BibleBooks'); // Update with your API route
+        const response = await fetch('/api/BibleBooks'); // Your API route for fetching books
         const data = await response.json();
         if (data.books) {
           setBooks(data.books); // Set the list of books
@@ -31,13 +32,31 @@ const BiblePage = () => {
     setSelectedBook(book);
     setLoading(true);
     try {
-      const response = await fetch(`/api/BibleBooks/${book}`); // Update with your API route
+      const response = await fetch(`/api/BibleBooks/${book}`); // Your API route for fetching chapters
       const data = await response.json();
 
       // Assuming data contains an array of chapter numbers
       setChapters(data.chapters.map((chapter: number) => chapter.toString())); // Convert numbers to strings
     } catch (error) {
       console.error('Error fetching chapters:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch verses for the selected chapter
+  const fetchVerses = async (chapter: string) => {
+    setSelectedChapter(chapter);
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/BibleBooks/${selectedBook}/${chapter}`); // Your API route for fetching verses
+      const data = await response.json();
+
+      // Assuming data contains an array of verses
+      // For now, just log the verses, you can update UI accordingly
+      console.log(data.verses);
+    } catch (error) {
+      console.error('Error fetching verses:', error);
     } finally {
       setLoading(false);
     }
@@ -50,7 +69,7 @@ const BiblePage = () => {
         <p className="mt-2 text-lg opacity-80">Select a Book</p>
       </header>
 
-      {/* List of Books */}
+      {/* Displaying Books */}
       {!selectedBook && loading ? (
         <div className="text-white">Loading books...</div>
       ) : !selectedBook ? (
@@ -74,18 +93,21 @@ const BiblePage = () => {
               <div className="text-white">Loading chapters...</div>
             ) : (
               chapters.map((chapter) => (
-                <Link href={`/bible/${selectedBook}/${chapter}`} key={chapter}>
-                  <button className="block bg-white text-black py-3 px-6 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300 ease-in-out text-lg w-full">
-                    Chapter {chapter}
-                  </button>
-                </Link>
+                <button
+                  key={chapter}
+                  onClick={() => fetchVerses(chapter)}
+                  className="block bg-white text-black py-3 px-6 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300 ease-in-out text-lg w-full"
+                >
+                  Chapter {chapter}
+                </button>
               ))
             )}
           </div>
           <button
             onClick={() => {
-              setSelectedBook('');
+              setSelectedBook(null);
               setChapters([]);
+              setSelectedChapter(null);
             }}
             className="mt-4 bg-gray-300 text-black py-2 px-4 rounded-lg hover:bg-gray-400 transition duration-300 ease-in-out"
           >
@@ -94,10 +116,10 @@ const BiblePage = () => {
         </div>
       )}
 
-      {/* Footer with navigation links */}
+      {/* Footer */}
       <footer className="mt-12 text-sm opacity-75 text-center">
-        <Link href="/" className="text-white hover:text-gray-300">
-          Back to Home
+        <Link href="/" passHref>
+          <button className="text-white hover:text-gray-300">Back to Home</button>
         </Link>
       </footer>
     </div>

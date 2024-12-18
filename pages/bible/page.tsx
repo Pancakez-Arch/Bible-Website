@@ -1,22 +1,36 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+interface BibleResponse {
+  books: string[];
+}
+
+interface ChapterResponse {
+  chapters: number[];
+}
+
 const BiblePage = () => {
   const [books, setBooks] = useState<string[]>([]);
   const [selectedBook, setSelectedBook] = useState<string>('');
   const [chapters, setChapters] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch the list of books from the API
   useEffect(() => {
     const fetchBooks = async () => {
+      setLoading(true);
+      setError(null); // Clear previous errors
       try {
-        const response = await fetch('/api/BibleBooks'); // Update with your API route
-        const data = await response.json();
+        const response = await fetch('/api/BibleBooks');
+        const data: BibleResponse = await response.json();
         if (data.books) {
-          setBooks(data.books); // Set the list of books
+          setBooks(data.books);
+        } else {
+          setError('Failed to load books. Please try again later.');
         }
       } catch (error) {
+        setError('Error fetching books. Please try again later.');
         console.error('Error fetching books:', error);
       } finally {
         setLoading(false);
@@ -30,13 +44,17 @@ const BiblePage = () => {
   const fetchChapters = async (book: string) => {
     setSelectedBook(book);
     setLoading(true);
+    setError(null); // Clear previous errors
     try {
-      const response = await fetch(`/api/BibleBooks/${book}`); // Update with your API route
-      const data = await response.json();
-
-      // Assuming data contains an array of chapter numbers
-      setChapters(data.chapters.map((chapter: number) => chapter.toString())); // Convert numbers to strings
+      const response = await fetch(`/api/BibleBooks/${book}`);
+      const data: ChapterResponse = await response.json();
+      if (data.chapters) {
+        setChapters(data.chapters.map((chapter) => chapter.toString()));
+      } else {
+        setError('Failed to load chapters. Please try again later.');
+      }
     } catch (error) {
+      setError('Error fetching chapters. Please try again later.');
       console.error('Error fetching chapters:', error);
     } finally {
       setLoading(false);
@@ -50,6 +68,9 @@ const BiblePage = () => {
         <p className="mt-2 text-lg opacity-80">Select a Book</p>
       </header>
 
+      {/* Error message */}
+      {error && <div className="text-red-500">{error}</div>}
+
       {/* List of Books */}
       {!selectedBook && loading ? (
         <div className="text-white">Loading books...</div>
@@ -60,6 +81,7 @@ const BiblePage = () => {
               key={index}
               onClick={() => fetchChapters(book)}
               className="bg-white text-black py-3 px-6 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300 ease-in-out text-xl"
+              disabled={loading}
             >
               {book}
             </button>
